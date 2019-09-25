@@ -14,7 +14,7 @@ export default class Main extends Component {
         super(props)
         this.state = {
             masukan: "",
-            msisdn: "",
+            msisdn: "081380294164",
             ip_address: "",
             loading : true,
             kumpulan : []
@@ -63,25 +63,25 @@ export default class Main extends Component {
             this.getMasukan()
         }, 500)
         // await this.getMasukan()
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
-            {
-                title: 'Phone Permission',
-                message:
-                    'This App need Your Phone Permission ',
-                buttonNeutral: 'Ask Me Later',
-                buttonNegative: 'Cancel',
-                buttonPositive: 'OK'
-            },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            DeviceInfo.getPhoneNumber().then(phoneNumber => {
-                this.setState({
-                    msisdn : phoneNumber
-                })
-                // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
-            });                  
-        }
+        // const granted = await PermissionsAndroid.request(
+        //     PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
+        //     {
+        //         title: 'Phone Permission',
+        //         message:
+        //             'This App need Your Phone Permission ',
+        //         buttonNeutral: 'Ask Me Later',
+        //         buttonNegative: 'Cancel',
+        //         buttonPositive: 'OK'
+        //     },
+        // );
+        // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        //     DeviceInfo.getPhoneNumber().then(phoneNumber => {
+        //         this.setState({
+        //             msisdn : phoneNumber
+        //         })
+        //         // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
+        //     });                  
+        // }
     }
     onChange = (value) => {
         this.setState({ masukan: value });
