@@ -92,7 +92,7 @@ export default class Main extends Component {
                 style={{ flex: 1, width: width, height: height }}
             >
                 <StatusBar backgroundColor='#131B4C' barStyle="light-content" />
-                <Tabs locked={tru} >
+                <Tabs locked={true} >
                     <Tab heading={<TabHeading style={{ backgroundColor: '#131B4C' }}><Icon style={{ color: 'white' }} name="checkbox" /><Text style={{color : 'white'}}>DISKUSI</Text></TabHeading>}>
                         <View
                             style={{
