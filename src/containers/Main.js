@@ -5,6 +5,7 @@ import PDFView from 'react-native-view-pdf/lib/index';
 import Textarea from 'react-native-textarea';
 import DeviceInfo from 'react-native-device-info';
 import { PermissionsAndroid } from 'react-native';
+import moment from 'moment';
 const { width, height } = Dimensions.get('window');
 const axios = require('axios');
 
@@ -58,7 +59,10 @@ export default class Main extends Component {
         }
       }
     async componentDidMount() {
-        await this.getMasukan()
+        setInterval(() => {
+            this.getMasukan()
+        }, 500)
+        // await this.getMasukan()
         const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
             {
@@ -88,25 +92,8 @@ export default class Main extends Component {
                 style={{ flex: 1, width: width, height: height }}
             >
                 <StatusBar backgroundColor='#131B4C' barStyle="light-content" />
-                <Tabs locked={true} >
-                    <Tab heading={<TabHeading style={{ backgroundColor: '#131B4C' }}><Icon style={{ color: 'white' }} name="book" /></TabHeading>}>
-                        <View
-                            style={{
-                                width: width,
-                                flex: 1
-                            }}
-                        >
-                            <View style={{ flex: 1 }}>
-                                <PDFView
-                                    fadeInDuration={0}
-                                    style={{ flex: 1 }}
-                                    resource={"http://202.157.176.50/files/SINAU%20BARENG%20REACT%20TECH.pdf"}
-                                    resourceType={"url"}
-                                />
-                            </View>
-                        </View>
-                    </Tab>
-                    <Tab heading={<TabHeading style={{ backgroundColor: '#131B4C' }}><Icon style={{ color: 'white' }} name="checkbox" /></TabHeading>}>
+                <Tabs locked={tru} >
+                    <Tab heading={<TabHeading style={{ backgroundColor: '#131B4C' }}><Icon style={{ color: 'white' }} name="checkbox" /><Text style={{color : 'white'}}>DISKUSI</Text></TabHeading>}>
                         <View
                             style={{
                                 width: width,
@@ -122,59 +109,118 @@ export default class Main extends Component {
                                 }}
                             >
                                 {this.state.loading ? null : this.state.kumpulan.map((item, index) => {
-                                    return (
-                                        <Text
+                                    if (item.msisdn === this.state.msisdn) {
+                                        return (
+                                            <View
                                             key={index}
-                                            style={{
-                                                width: width, 
-                                                textAlign : 'left', 
-                                                padding :5, 
-                                                color : '#131B4C',
-                                                fontSize: 15
-                                            }}
+                                            style={{width: width, height: null, marginVertical: 5, alignItems: 'center', justifyContent: 'center'}}
+                                            >
+                                                <View
+                                                    style={{width: 0.95*width, height: null, padding : 5, borderWidth: 1, borderRadius: 5, backgroundColor: '#131B4C'}}
+                                                >
+                                                    <Text   
+                                                        style={{
+                                                            width: 0.95*width, 
+                                                            textAlign : 'right', 
+                                                            paddingHorizontal : 15, 
+                                                            color : 'white',
+                                                            fontSize: 15
+                                                        }}
+                                                    >
+                                                        {moment(item.modified).format('dddd, DD MMMM YYYY HH:mm:ss')}{"\n"}My Self{"\n"}{item.komentar}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        )
+                                    }
+                                    return (
+                                        <View
+                                            key={index}
+                                            style={{width: width, height: null, marginVertical: 5, alignItems: 'center', justifyContent: 'center'}}
                                         >
-                                            {item.msisdn}{"\n"}{item.komentar}
-                                        </Text>
+                                            <View
+                                                style={{width: 0.95*width, height: null, padding : 5, borderWidth: 1, borderRadius: 5, borderColor: '#131B4C'}}
+                                            >
+                                                <Text   
+                                                    style={{
+                                                        width: width, 
+                                                        textAlign : 'left', 
+                                                        margin :5, 
+                                                        color : '#131B4C',
+                                                        fontSize: 15
+                                                    }}
+                                                >
+                                                    {moment(item.modified).format('dddd, DD MMMM YYYY HH:mm:ss')}{"\n"}{item.msisdn}{"\n"}{item.komentar}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        
                                     )
                                 })}
                             </ScrollView>
-                            <Textarea
-                                containerStyle={{
-                                    height: 180,
-                                    padding: 25,
-                                    backgroundColor: '#131B4C'
-                                }}
+                            <View
                                 style={{
-                                    textAlignVertical: 'top',  // hack android
-                                    height: 170,
-                                    fontSize: 14,
-                                    color: 'white',
-                                }}
-                                onChangeText={this.onChange}
-                                defaultValue={this.state.masukan}
-                                maxLength={120}
-                                placeholder={'Input Your Comment Here'}
-                                placeholderTextColor={'white'}
-                                underlineColorAndroid={'transparent'}
-                            />
-                            <TouchableOpacity
-                                style={{
-                                    width: width,
-                                    height: 0.1*height,
-                                    backgroundColor : '#131B4C',
-                                    borderTopWidth: 5,
-                                    borderTopColor: 'white',
+                                    flexDirection: 'row',
                                     alignItems : 'center',
-                                    justifyContent: 'center'
+                                    justifyContent : 'center',
+                                    height: 100,
+                                    borderTopColor :"#131B4C",
+                                    borderTopWidth : 3
                                 }}
-                                onPress={async () => await this.submitSaran()}
                             >
-                                <Text
-                                    style={{color : 'white', textAlignVertical : 'center', textAlign : 'center', fontSize : 15, color: 'white'}}
+                                <Textarea
+                                    containerStyle={{
+                                        height: 100,
+                                        padding: 25,
+                                        backgroundColor: 'white',
+                                        width: 0.75*width
+                                    }}
+                                    style={{
+                                        textAlignVertical: 'top',  // hack android
+                                        height: 90,
+                                        fontSize: 14,
+                                        color: '#131B4C',
+                                        padding: 10
+                                    }}
+                                    onChangeText={this.onChange}
+                                    defaultValue={this.state.masukan}
+                                    maxLength={120}
+                                    placeholder={'Input Your Comment Here'}
+                                    placeholderTextColor={'#131B4C'}
+                                    underlineColorAndroid={'transparent'}
+                                />
+                                <TouchableOpacity
+                                    style={{
+                                        width: 0.25*width,
+                                        height: 100,
+                                        backgroundColor : '#131B4C',
+                                        borderLeftWidth: 5,
+                                        borderLeftColor: 'white',
+                                        alignItems : 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                    onPress={async () => await this.submitSaran()}
                                 >
-                                    SUBMIT SARAN
-                                </Text>
-                            </TouchableOpacity>
+                                    <Text style={{margin: 0, padding: 0, width: 0.2*width, textAlign : 'center', color: 'white'}}>SEND</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Tab>
+                    <Tab heading={<TabHeading style={{ backgroundColor: '#131B4C' }}><Icon style={{ color: 'white' }} name="book" /><Text style={{color : 'white'}}>MATERI</Text></TabHeading>}>
+                        <View
+                            style={{
+                                width: width,
+                                flex: 1
+                            }}
+                        >
+                            <View style={{ flex: 1 }}>
+                                <PDFView
+                                    fadeInDuration={0}
+                                    style={{ flex: 1 }}
+                                    resource={"http://202.157.176.50/files/REACT%20TECH.pdf"}
+                                    resourceType={"url"}
+                                />
+                            </View>
                         </View>
                     </Tab>
                 </Tabs>
